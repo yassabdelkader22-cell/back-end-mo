@@ -4,10 +4,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const http = require('http');
+const connectToMongo = require('./config/mongo.connection');
+
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
+require('dotenv').config();
 
 var app = express();
 
@@ -27,7 +30,8 @@ app.use('/users', usersRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
+//wuc84DrtWZjdohuJ
+//mongodb+srv://<db_username>:wuc84DrtWZjdohuJ@cluster0.a50lgjd.mongodb.net/
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
@@ -39,7 +43,8 @@ app.use(function(err, req, res, next) {
   res.json('error');
 });
 const server = http.createServer(app);
-server.listen(3000, () => {
-  console.log('Server is running on port 3000');
+server.listen(process.env.port , () => {
+  connectToMongo();
+  console.log(`Server is running on port ${process.env.port} `);
 });
 
