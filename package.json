@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "create-owner": "node scripts/createOwner.js"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^17.4.2",
@@ -15,6 +17,7 @@
     "jade": "~1.11.0",
     "mongoose": "^7.6.3",
     "morgan": "~1.9.1",
+    "multer": "^2.2.0",
     "nodemon": "^3.1.14"
   }
 }
