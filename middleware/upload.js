@@ -16,15 +16,11 @@ const storage = multer.diskStorage({
     }
 });
 
+// ✅ إزالة الفلتر تماماً - يقبل أي ملف
 const upload = multer({
     storage,
-    limits: { fileSize: 5 * 1024 * 1024 },
-    fileFilter: (req, file, cb) => {
-        const allowed = /jpeg|jpg|png|gif|webp/;
-        const ext = allowed.test(path.extname(file.originalname).toLowerCase());
-        const mime = allowed.test(file.mimetype);
-        if (mime && ext) return cb(null, true);
-        cb(new Error('Seules les images sont autorisées'));
+    limits: { 
+        fileSize: 50 * 1024 * 1024 // 50MB
     }
 });
 

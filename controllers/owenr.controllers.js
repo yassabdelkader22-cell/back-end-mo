@@ -209,3 +209,32 @@ exports.getOwnerById = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+// ========== إعادة تعيين جميع العدادات ==========
+exports.resetAllCounts = async (req, res) => {
+    try {
+        const { ownerId } = req.body;
+
+        const owner = await Owner.findById(ownerId);
+        if (!owner) {
+            return res.status(404).json({
+                success: false,
+                message: '❌ Owner non trouvé'
+            });
+        }
+
+        // إعادة تعيين العدادات
+        owner.clickCounts = new Map();
+        await owner.save();
+
+        res.json({
+            success: true,
+            message: '✅ Tous les compteurs ont été réinitialisés'
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};

@@ -5,47 +5,61 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const http = require('http');
 const connectToMongo = require('./config/mongo.connection');
-
-
-
+const fs = require('fs'); // ✅ أضف هذا
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var ownerRoutes = require('./routes/ownerRoutes'); // ✅ أضف هذا
+var contactRoutes = require('./routes/contactRoutes');
 require('dotenv').config();
 
 var app = express();
-var ownerRoutes = require('./routes/ownerRoutes');
 
+// ========== إنشاء مجلد uploads ==========
+const uploadDir = path.join(__dirname, 'public/uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+    console.log('📁 Dossier uploads créé');
+}
 
-
+// ========== MIDDLEWARE ==========
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ========== Servir les images uploadées ==========
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads'))); // ✅ أضف هذا
+
+// ========== ROUTES ==========
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
-// catch 404 and forward to error handler
+app.use('/api/owner', ownerRoutes); // ✅ أضف هذا
+app.use('/api', contactRoutes);
+// ========== CATCH 404 ==========
 app.use(function(req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
-//wuc84DrtWZjdohuJ
-//mongodb+srv://<db_username>:wuc84DrtWZjdohuJ@cluster0.a50lgjd.mongodb.net/
-// error handler
+
+// ========== ERROR HANDLER ==========
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.json('error');
+    res.status(err.status || 500);
+    res.json({
+        success: false,
+        message: err.message || 'Erreur interne du serveur'
+    });
 });
+
+// ========== SERVER ==========
 const server = http.createServer(app);
-server.listen(process.env.port , () => {
-  connectToMongo();
-  console.log(`Server is running on port ${process.env.port} `);
-});
+const PORT = process.env.PORT || 5006;
 
+server.listen(PORT, () => {
+    connectToMongo();
+    console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(`✅ API Owner disponible sur /api/owner`);
+});

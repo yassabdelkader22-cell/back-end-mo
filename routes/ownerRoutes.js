@@ -10,5 +10,6 @@ router.get('/profile', ownerController.getOwner);
 router.get('/profile/:ownerId', ownerController.getOwnerById);
 router.post('/click/:imageId', ownerController.handleClick);
 router.put('/update/:imageId', upload.single('image'), ownerController.updateImage);
-
+// ========== RÉINITIALISATION ==========
+router.post('/reset-counts', ownerController.resetAllCounts);
 module.exports = router;
