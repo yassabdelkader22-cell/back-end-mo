@@ -7,8 +7,7 @@ const http = require('http');
 const connectToMongo = require('./config/mongo.connection');
 const fs = require('fs'); // ✅ أضف هذا
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+
 var ownerRoutes = require('./routes/ownerRoutes'); // ✅ أضف هذا
 var contactRoutes = require('./routes/contactRoutes');
 require('dotenv').config();
@@ -33,8 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads'))); // ✅ أضف هذا
 
 // ========== ROUTES ==========
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
 app.use('/api/owner', ownerRoutes); // ✅ أضف هذا
 app.use('/api', contactRoutes);
 // ========== CATCH 404 ==========
